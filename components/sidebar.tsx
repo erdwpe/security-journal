@@ -3,6 +3,14 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
+
+import {
+  Menu,
+  MenuButton,
+  MenuItems,
+  MenuItem,
+} from '@headlessui/react'
+
 import {
   LayoutDashboard,
   FileText,
@@ -29,26 +37,31 @@ export default function Sidebar() {
       background: '#18181b',
       color: '#fff',
     })
-  
+
     if (!result.isConfirmed) return
-  
+
     await supabase.auth.signOut()
-  
+
     router.push('/login')
   }
 
   return (
-    <aside className="hidden md:flex w-64 min-h-screen bg-zinc-900 border-r border-zinc-800 flex-col justify-between p-4">
-      <div className="mb-8">
+    <aside className="hidden md:flex w-64 min-h-screen bg-zinc-900 border-r border-zinc-800 flex-col p-4">
+
+      {/* HEADER */}
+      <div className="flex items-center justify-between mb-10">
         <h1 className="text-2xl font-bold text-green-500">
           Security Journal
         </h1>
+
+        {/* DROPDOWN */}
       </div>
 
-      <nav className="space-y-2 flex-1">
+      {/* MENU */}
+      <nav className="space-y-2">
         <Link
           href="/dashboard"
-          className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-zinc-800"
+          className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-zinc-800 transition"
         >
           <LayoutDashboard size={18} />
           Dashboard
@@ -56,7 +69,7 @@ export default function Sidebar() {
 
         <Link
           href="/journal/new"
-          className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-zinc-800"
+          className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-zinc-800 transition"
         >
           <FileText size={18} />
           Jurnal
@@ -64,26 +77,12 @@ export default function Sidebar() {
 
         <Link
           href="/journal/history"
-          className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-zinc-800"
+          className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-zinc-800 transition"
         >
           <History size={18} />
           Riwayat
         </Link>
       </nav>
-      <Link
-  href="/settings"
-  className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-zinc-800"
->
-  <Settings size={18} />
-  Pengaturan
-</Link>
-      <button
-        onClick={handleLogout}
-        className="flex items-center gap-3 w-full p-3 rounded-2xl bg-red-600 hover:bg-red-500 transition"
-      >
-        <LogOut size={18} />
-        Logout
-      </button>
     </aside>
   )
 }

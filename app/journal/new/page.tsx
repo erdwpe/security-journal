@@ -85,15 +85,21 @@ export default function CreateJournalPage() {
       .from('journals')
       .insert({
         kegiatan,
-        catatan: laporan,
+        laporan,
         kendaraan,
         status: 'aman',
         shift: getShift(),
         lokasi: 'Depan/Belakang',
         photo_url: photoUrl,
         user_id: session?.user.id,
+      
+        created_at: new Date().toLocaleString(
+          'sv-SE',
+          {
+            timeZone: 'Asia/Jakarta',
+          }
+        ),
       })
-
       if (error) {
         Swal.fire({
             icon: 'error',

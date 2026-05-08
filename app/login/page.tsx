@@ -10,45 +10,51 @@ export default function LoginPage() {
   const router = useRouter()
 
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [password, setPassword] =
+    useState('')
+  const [loading, setLoading] =
+    useState(false)
 
   const handleLogin = async () => {
     setLoading(true)
-  
+
     let loginEmail = email
-  
+
     // kalau input bukan email
     if (!email.includes('@')) {
-        const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('username', email)
-        .maybeSingle()
-      
+      const { data, error } =
+        await supabase
+          .from('profiles')
+          .select('*')
+          .eq('username', email)
+          .maybeSingle()
+
       if (error || !data) {
         setLoading(false)
-      
+
         Swal.fire({
           icon: 'error',
           title: 'User tidak ditemukan',
           background: '#18181b',
           color: '#fff',
         })
-      
+
         return
       }
-      
+
       loginEmail = data.email
     }
-  
-    const { error } = await supabase.auth.signInWithPassword({
-      email: loginEmail,
-      password,
-    })
-  
+
+    const { error } =
+      await supabase.auth.signInWithPassword(
+        {
+          email: loginEmail,
+          password,
+        }
+      )
+
     setLoading(false)
-  
+
     if (error) {
       Swal.fire({
         icon: 'error',
@@ -57,10 +63,10 @@ export default function LoginPage() {
         background: '#18181b',
         color: '#fff',
       })
-  
+
       return
     }
-  
+
     Swal.fire({
       icon: 'success',
       title: 'Login berhasil',
@@ -69,7 +75,7 @@ export default function LoginPage() {
       background: '#18181b',
       color: '#fff',
     })
-  
+
     router.push('/dashboard')
   }
 
@@ -86,12 +92,20 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="space-y-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleLogin()
+          }}
+          className="space-y-4"
+        >
           <input
-            type="email"
+            type="text"
             placeholder="Email atau Username"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
             className="w-full bg-zinc-800 rounded-2xl p-4 outline-none"
           />
 
@@ -99,34 +113,35 @@ export default function LoginPage() {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
             className="w-full bg-zinc-800 rounded-2xl p-4 outline-none"
           />
 
-<button
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-green-600 hover:bg-green-500 transition rounded-2xl p-4 font-semibold disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center"
+          >
+            {loading ? (
+              <div className="flex items-center gap-3">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
 
-  onClick={handleLogin}
-  disabled={loading}
-  className="w-full bg-green-600 hover:bg-green-500 transition rounded-2xl p-4 font-semibold disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center"
->
-  {loading ? (
-    <div className="flex items-center gap-3">
-      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Masuk...</span>
+              </div>
+            ) : (
+              'Login'
+            )}
+          </button>
 
-      <span>Masuk...</span>
-    </div>
-  ) : (
-    'Login'
-  )}
-
-</button>
-<Link
-  href="/forgot-password"
-  className="block text-center text-zinc-400 hover:text-white mt-4"
->
-  Lupa password?
-</Link>
-        </div>
+          <Link
+            href="/forgot-password"
+            className="block text-center text-zinc-400 hover:text-white mt-4"
+          >
+            Lupa password?
+          </Link>
+        </form>
       </div>
     </main>
   )

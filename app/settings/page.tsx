@@ -13,12 +13,28 @@ import Swal from 'sweetalert2'
 export default function SettingsPage() {
   const router = useRouter()
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] =
+    useState(false)
 
-  const [email, setEmail] = useState('')
-  const [fullName, setFullName] = useState('')
-  const [username, setUsername] = useState('')
-  const [avatar, setAvatar] = useState('')
+  const [email, setEmail] =
+    useState('')
+
+  const [fullName, setFullName] =
+    useState('')
+
+  const [username, setUsername] =
+    useState('')
+
+  const [avatar, setAvatar] =
+    useState('')
+
+  const [
+    shiftStartDate,
+    setShiftStartDate,
+  ] = useState('')
+
+  const [shiftType, setShiftType] =
+    useState('Pagi')
 
   useEffect(() => {
     fetchProfile()
@@ -35,7 +51,15 @@ export default function SettingsPage() {
 
     const { data } = await supabase
       .from('profiles')
-      .select('*')
+      .select(
+        `
+        full_name,
+        username,
+        avatar_url,
+        shift_start_date,
+        shift_type
+      `
+      )
       .eq('id', session.user.id)
       .single()
 
@@ -43,6 +67,14 @@ export default function SettingsPage() {
       setFullName(data.full_name || '')
       setUsername(data.username || '')
       setAvatar(data.avatar_url || '')
+
+      setShiftStartDate(
+        data.shift_start_date || ''
+      )
+
+      setShiftType(
+        data.shift_type || 'Pagi'
+      )
     }
   }
 
@@ -53,7 +85,9 @@ export default function SettingsPage() {
 
     if (!file) return
 
-    const filename = `${Date.now()}-${file.name}`
+    const filename = `${Date.now()}-${
+      file.name
+    }`
 
     const { error } = await supabase.storage
       .from('avatars')
@@ -101,10 +135,19 @@ export default function SettingsPage() {
       .from('profiles')
       .upsert({
         id: session.user.id,
+
         full_name: fullName,
+
         username,
+
         avatar_url: avatar,
-        email: email,
+
+        shift_start_date:
+          shiftStartDate,
+
+        shift_type: shiftType,
+
+        email,
       })
 
     setLoading(false)
@@ -154,94 +197,149 @@ export default function SettingsPage() {
 
   return (
     <ProtectedLayout>
-    <main className="flex min-h-screen bg-zinc-950 text-white ">
-      <Sidebar />
+      <main className="flex min-h-screen bg-zinc-950 text-white">
+        <Sidebar />
 
-      <section className="flex-1 p-4 md:p-8 pb-24">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-4xl font-bold mb-8">
-            Pengaturan Akun
-          </h1>
+        <section className="flex-1 p-4 md:p-8 pb-24">
+          <div className="max-w-2xl mx-auto">
+            <h1 className="text-4xl font-bold mb-8">
+              Pengaturan Akun
+            </h1>
 
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-            <div className="flex flex-col items-center mb-8">
-              <label className="cursor-pointer">
-                {avatar ? (
-                  <img
-                    src={avatar}
-                    alt="Avatar"
-                    className="w-28 h-28 rounded-full object-cover border-4 border-zinc-700"
+            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+              <div className="flex flex-col items-center mb-8">
+                <label className="cursor-pointer">
+                  {avatar ? (
+                    <img
+                      src={avatar}
+                      alt="Avatar"
+                      className="w-28 h-28 rounded-full object-cover border-4 border-zinc-700"
+                    />
+                  ) : (
+                    <div className="w-28 h-28 rounded-full bg-zinc-800 flex items-center justify-center text-3xl font-bold">
+                      {fullName?.charAt(0) ||
+                        'U'}
+                    </div>
+                  )}
+
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleUpload}
                   />
-                ) : (
-                  <div className="w-28 h-28 rounded-full bg-zinc-800 flex items-center justify-center text-3xl font-bold">
-                    {fullName?.charAt(0) || 'U'}
-                  </div>
-                )}
+                </label>
+
+                <p className="text-zinc-400 mt-3">
+                  Klik foto untuk upload
+                  avatar
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Nama lengkap"
+                  value={fullName}
+                  onChange={(e) =>
+                    setFullName(
+                      e.target.value
+                    )
+                  }
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-4 outline-none"
+                />
 
                 <input
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleUpload}
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) =>
+                    setUsername(
+                      e.target.value
+                    )
+                  }
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-4 outline-none"
                 />
-              </label>
 
-              <p className="text-zinc-400 mt-3">
-                Klik foto untuk upload avatar
-              </p>
-            </div>
+                <div>
+                  <p className="text-sm text-zinc-400 mb-2">
+                    Tanggal mulai siklus
+                    shift
+                  </p>
 
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Nama lengkap"
-                value={fullName}
-                onChange={(e) =>
-                  setFullName(e.target.value)
-                }
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-4 outline-none"
-              />
+                  <input
+                    type="date"
+                    value={shiftStartDate}
+                    onChange={(e) =>
+                      setShiftStartDate(
+                        e.target.value
+                      )
+                    }
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-4 outline-none"
+                  />
+                </div>
 
-              <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) =>
-                  setUsername(e.target.value)
-                }
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-4 outline-none"
-              />
+                <div>
+                  <p className="text-sm text-zinc-400 mb-2">
+                    Shift pertama pada
+                    tanggal tersebut
+                  </p>
 
-              <input
-                type="email"
-                value={email}
-                disabled
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4 text-zinc-400"
-              />
+                  <select
+                    value={shiftType}
+                    onChange={(e) =>
+                      setShiftType(
+                        e.target.value
+                      )
+                    }
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-4 outline-none"
+                  >
+                    <option value="Pagi">
+                      Pagi Pertama
+                    </option>
 
-              <button
-                onClick={handleSave}
-                disabled={loading}
-                className="w-full bg-green-600 hover:bg-green-500 transition rounded-2xl p-4 font-semibold"
-              >
-                {loading
-                  ? 'Menyimpan...'
-                  : 'Simpan Profile'}
-              </button>
+                    <option value="Malam">
+                      Malam Pertama
+                    </option>
 
-              <button
-                onClick={handleLogout}
-                className="w-full bg-red-600 hover:bg-red-500 transition rounded-2xl p-4 font-semibold"
-              >
-                Logout
-              </button>
+                    <option value="Off">
+                      Off Pertama
+                    </option>
+                  </select>
+                </div>
+
+                <input
+                  type="email"
+                  value={email}
+                  disabled
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4 text-zinc-400"
+                />
+
+                <button
+                  onClick={handleSave}
+                  disabled={loading}
+                  className="w-full bg-green-600 hover:bg-green-500 transition rounded-2xl p-4 font-semibold"
+                >
+                  {loading
+                    ? 'Menyimpan...'
+                    : 'Simpan Profile'}
+                </button>
+
+                <div className="md:hidden">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full bg-red-600 hover:bg-red-500 transition rounded-2xl p-4 font-semibold"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <MobileNavbar />
-    </main>
+        <MobileNavbar />
+      </main>
     </ProtectedLayout>
   )
 }
