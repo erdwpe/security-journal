@@ -71,13 +71,13 @@ export default function DashboardPage() {
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-              <p className="text-zinc-400">
+              <p className="text-zinc-400 text-sm">
                 Total Jurnal
               </p>
 
-              <h2 className="text-5xl font-bold mt-3">
+              <h2 className="text-5xl font-bold">
                 {totalJurnal}
               </h2>
             </div>

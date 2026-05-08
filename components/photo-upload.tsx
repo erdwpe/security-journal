@@ -40,7 +40,7 @@ export default function PhotoUpload({
         <img
           src={preview}
           alt="Preview"
-          className="w-full h-full object-cover"
+          className="w-full h-64 object-cover rounded-2xl"
         />
       ) : (
         <div className="flex flex-col items-center justify-center p-8">

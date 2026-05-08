@@ -9,7 +9,7 @@ import Sidebar from '@/components/sidebar'
 import MobileNavbar from '@/components/mobile-navbar'
 import JournalForm from '@/components/journal-form'
 import PhotoUpload from '@/components/photo-upload'
-
+import ProtectedLayout from '@/app/protected-layout'
 import { supabase } from '@/lib/supabase'
 
 export default function CreateJournalPage() {
@@ -131,6 +131,7 @@ export default function CreateJournalPage() {
   }
 
   return (
+    <ProtectedLayout>
     <main className="flex min-h-screen bg-zinc-950 text-white">
       <Sidebar />
 
@@ -168,5 +169,6 @@ export default function CreateJournalPage() {
 
       <MobileNavbar />
     </main>
+    </ProtectedLayout>
   )
 }

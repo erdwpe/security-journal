@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import Sidebar from '@/components/sidebar'
 import MobileNavbar from '@/components/mobile-navbar'
-
+import ProtectedLayout from '@/app/protected-layout'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
@@ -153,7 +153,8 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="flex min-h-screen bg-zinc-950 text-white">
+    <ProtectedLayout>
+    <main className="flex min-h-screen bg-zinc-950 text-white ">
       <Sidebar />
 
       <section className="flex-1 p-4 md:p-8 pb-24">
@@ -241,5 +242,6 @@ export default function SettingsPage() {
 
       <MobileNavbar />
     </main>
+    </ProtectedLayout>
   )
 }

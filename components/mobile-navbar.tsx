@@ -37,7 +37,7 @@ export default function MobileNavbar() {
   ]
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 px-4 py-3 flex items-center justify-around z-50">
+    <nav className="fixed bottom-0 left-0 right-0 md:hidden bg-zinc-900 border-t border-zinc-800 h-20 flex items-center justify-around px-4 z-50">
       {menus.map((item) => {
         const Icon = item.icon
         const active =

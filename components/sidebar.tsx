@@ -38,7 +38,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-zinc-900 border-r border-zinc-800 p-4">
+    <aside className="hidden md:flex w-64 min-h-screen bg-zinc-900 border-r border-zinc-800 flex-col justify-between p-4">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-green-500">
           Security Journal
@@ -79,7 +79,7 @@ export default function Sidebar() {
 </Link>
       <button
         onClick={handleLogout}
-        className="flex items-center gap-3 w-full p-3 rounded-xl bg-red-600 hover:bg-red-500 transition"
+        className="flex items-center gap-3 w-full p-3 rounded-2xl bg-red-600 hover:bg-red-500 transition"
       >
         <LogOut size={18} />
         Logout

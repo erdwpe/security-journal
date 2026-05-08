@@ -8,7 +8,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-zinc-950 text-white">
+      <body className="max-w-6xl mx-auto">
         {children}
 
         <Toaster
